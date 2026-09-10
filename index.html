@@ -1,139 +1,604 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calendário Verde</title>
-<style>
-* { box-sizing: border-box; }
-body {
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: Arial, sans-serif;
-    color: white;
-    background:
-        linear-gradient(rgba(0,45,20,.72), rgba(0,15,8,.9)),
-        radial-gradient(circle at 20% 20%, #27ae60, transparent 35%),
-        radial-gradient(circle at 80% 80%, #145a32, transparent 40%),
-        #031b0d;
-}
-.app {
-    width: min(92%, 400px);
-    padding: 28px;
-    border: 1px solid #2ecc71;
-    border-radius: 24px;
-    background: rgba(0, 20, 10, .88);
-    box-shadow: 0 20px 60px rgba(0,0,0,.5);
-    text-align: center;
-}
-.calendar {
-    width: 100px;
-    height: 90px;
-    margin: 0 auto 20px;
-    border: 4px solid #2ecc71;
-    border-radius: 12px;
-    position: relative;
-    background: #071f10;
-    overflow: hidden;
-}
-.calendar::before {
-    content: "🌿";
-    position: absolute;
-    font-size: 55px;
-    right: -5px;
-    bottom: -12px;
-    transform: rotate(-15deg);
-}
-.calendar::after {
-    content: "CALENDÁRIO";
-    position: absolute;
-    top: 8px;
-    left: 0;
-    width: 100%;
-    font-size: 10px;
-    font-weight: bold;
-    color: #b8ffd2;
-}
-h1 { margin: 0 0 8px; }
-p { color: #b8c9be; }
-input {
-    width: 100%;
-    padding: 15px;
-    border: 1px solid #2ecc71;
-    border-radius: 12px;
-    background: #07140c;
-    color: white;
-    font-size: 18px;
-    text-align: center;
-    outline: none;
-}
-button {
-    width: 100%;
-    margin-top: 12px;
-    padding: 15px;
-    border: 0;
-    border-radius: 12px;
-    background: #27ae60;
-    color: white;
-    font-size: 17px;
-    font-weight: bold;
-    cursor: pointer;
-}
-button:hover { background: #2ecc71; }
-#resultado {
-    min-height: 28px;
-    margin-top: 20px;
-    font-size: 22px;
-    font-weight: bold;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#06140d">
+
+    <title>Dia da Semana | Nature</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --verde: #21d36b;
+            --verde-claro: #76ffa7;
+            --fundo: #020b06;
+            --texto: #f2fff7;
+            --cinza: #a9c0b2;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            overflow: hidden;
+
+            font-family: Arial, sans-serif;
+            color: var(--texto);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background:
+                radial-gradient(
+                    circle at 15% 15%,
+                    rgba(33, 211, 107, 0.25),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 90% 85%,
+                    rgba(10, 120, 55, 0.30),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    145deg,
+                    #061a0e,
+                    var(--fundo) 60%,
+                    #03170a
+                );
+        }
+
+        /* Folhas decorativas */
+
+        body::before {
+            content: "🌿";
+            position: fixed;
+            top: -30px;
+            left: -25px;
+            font-size: 140px;
+            opacity: 0.12;
+            transform: rotate(-25deg);
+            pointer-events: none;
+        }
+
+        body::after {
+            content: "🌿";
+            position: fixed;
+            bottom: -35px;
+            right: -20px;
+            font-size: 140px;
+            opacity: 0.12;
+            transform: rotate(145deg);
+            pointer-events: none;
+        }
+
+        .folha {
+            position: fixed;
+            font-size: 28px;
+            opacity: 0.20;
+            animation: flutuar 7s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .folha1 {
+            top: 12%;
+            right: 12%;
+        }
+
+        .folha2 {
+            bottom: 17%;
+            left: 10%;
+            animation-delay: 2s;
+        }
+
+        .folha3 {
+            top: 30%;
+            left: 6%;
+            animation-delay: 4s;
+        }
+
+        @keyframes flutuar {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-15px) rotate(8deg);
+            }
+        }
+
+        /* Aplicativo */
+
+        .app {
+            width: min(92vw, 430px);
+
+            padding: 32px 28px 26px;
+
+            text-align: center;
+
+            border: 1px solid rgba(33, 211, 107, 0.35);
+            border-radius: 30px;
+
+            background: rgba(7, 24, 14, 0.82);
+
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+
+            box-shadow:
+                0 30px 80px rgba(0, 0, 0, 0.55),
+                0 0 45px rgba(33, 211, 107, 0.08);
+
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Etiqueta */
+
+        .badge {
+            display: inline-block;
+
+            padding: 7px 12px;
+
+            border-radius: 999px;
+
+            background: rgba(33, 211, 107, 0.10);
+
+            border: 1px solid rgba(33, 211, 107, 0.25);
+
+            color: #baffd2;
+
+            font-size: 11px;
+            font-weight: bold;
+
+            letter-spacing: 1px;
+
+            margin-bottom: 18px;
+        }
+
+        /* Calendário */
+
+        .calendario {
+            width: 108px;
+            height: 100px;
+
+            margin: 0 auto 18px;
+
+            border: 2px solid rgba(33, 211, 107, 0.75);
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #0b2d18,
+                    #05150b
+                );
+
+            box-shadow:
+                0 12px 35px rgba(0, 0, 0, 0.35);
+
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calendario-topo {
+            height: 29px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #13a951,
+                    #25dc70
+                );
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #021108;
+
+            font-size: 9px;
+            font-weight: 800;
+
+            letter-spacing: 1px;
+        }
+
+        .dias-calendario {
+            display: grid;
+
+            grid-template-columns: repeat(7, 1fr);
+
+            gap: 4px;
+
+            padding: 11px;
+        }
+
+        .dias-calendario span {
+            height: 7px;
+
+            border-radius: 3px;
+
+            background: rgba(186, 255, 210, 0.28);
+        }
+
+        .folha-calendario {
+            position: absolute;
+
+            right: -3px;
+            bottom: -12px;
+
+            font-size: 53px;
+
+            opacity: 0.95;
+
+            transform: rotate(-15deg);
+        }
+
+        /* Título */
+
+        h1 {
+            margin: 0;
+
+            font-size: 32px;
+
+            letter-spacing: -1px;
+        }
+
+        .subtitulo {
+            margin: 10px 0 24px;
+
+            color: var(--cinza);
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+        /* Campo */
+
+        label {
+            display: block;
+
+            text-align: left;
+
+            margin: 0 0 8px 3px;
+
+            color: #cde0d4;
+
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            height: 56px;
+
+            padding: 0 16px;
+
+            border: 1px solid rgba(119, 255, 166, 0.25);
+
+            border-radius: 15px;
+
+            outline: none;
+
+            background: rgba(0, 0, 0, 0.30);
+
+            color: white;
+
+            font-size: 18px;
+
+            text-align: center;
+
+            transition: 0.2s;
+        }
+
+        input:focus {
+            border-color: var(--verde);
+
+            box-shadow:
+                0 0 0 4px rgba(33, 211, 107, 0.10);
+        }
+
+        /* Botão */
+
+        button {
+            width: 100%;
+            height: 56px;
+
+            margin-top: 12px;
+
+            border: 0;
+
+            border-radius: 15px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #16b85a,
+                    #27df73
+                );
+
+            color: #021108;
+
+            font-size: 16px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 10px 25px rgba(33, 211, 107, 0.18);
+
+            transition: 0.15s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 14px 30px rgba(33, 211, 107, 0.25);
+        }
+
+        button:active {
+            transform: scale(0.99);
+        }
+
+        /* Resultado */
+
+        #resultado {
+            min-height: 62px;
+
+            margin-top: 18px;
+
+            padding: 16px 12px;
+
+            border-radius: 15px;
+
+            background: rgba(0, 0, 0, 0.22);
+
+            border: 1px solid rgba(255, 255, 255, 0.06);
+
+            font-size: 20px;
+
+            font-weight: 800;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sucesso {
+            color: var(--verde-claro);
+        }
+
+        .erro {
+            color: #ff8f8f;
+        }
+
+        .rodape {
+            margin-top: 17px;
+
+            color: #71897a;
+
+            font-size: 11px;
+        }
+
+        @media (max-height: 700px) {
+
+            .app {
+                padding-top: 24px;
+                padding-bottom: 20px;
+            }
+
+            .calendario {
+                transform: scale(0.88);
+            }
+
+            .subtitulo {
+                margin-bottom: 18px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-<div class="app">
-    <div class="calendar"></div>
-    <h1>Dia da Semana</h1>
-    <p>Digite um número de 1 a 7</p>
 
-    <input id="numero" type="number" placeholder="Ex.: 1" inputmode="numeric">
-    <button onclick="verificarDia()">Verificar</button>
+    <!-- Folhas do fundo -->
 
-    <div id="resultado"></div>
-</div>
+    <div class="folha folha1">🍃</div>
+    <div class="folha folha2">🌱</div>
+    <div class="folha folha3">🍃</div>
 
-<script>
-function verificarDia() {
-    const campo = document.getElementById("numero");
-    const resultado = document.getElementById("resultado");
-    const valor = campo.value.trim();
+    <main class="app">
 
-    if (valor === "") {
-        resultado.textContent = "Digite um número";
-        return;
-    }
+        <div class="badge">
+            🌿 NATURE APP
+        </div>
 
-    const numero = Number(valor);
+        <!-- Calendário -->
 
-    if (numero === 1) {
-        resultado.textContent = "Domingo";
-    } else if (numero === 2) {
-        resultado.textContent = "Segunda";
-    } else if (numero === 3) {
-        resultado.textContent = "Terça";
-    } else if (numero === 4) {
-        resultado.textContent = "Quarta";
-    } else if (numero === 5) {
-        resultado.textContent = "Quinta";
-    } else if (numero === 6) {
-        resultado.textContent = "Sexta";
-    } else if (numero === 7) {
-        resultado.textContent = "Sábado";
-    } else {
-        resultado.textContent = "Valor inválido";
-    }
-}
-</script>
+        <div class="calendario">
+
+            <div class="calendario-topo">
+                CALENDÁRIO
+            </div>
+
+            <div class="dias-calendario">
+
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </div>
+
+            <div class="folha-calendario">
+                🌿
+            </div>
+
+        </div>
+
+        <h1>
+            Dia da Semana
+        </h1>
+
+        <p class="subtitulo">
+            Digite um número de <strong>1 a 7</strong>
+            para descobrir o dia correspondente.
+        </p>
+
+        <label for="numero">
+            Número do dia
+        </label>
+
+        <input
+            id="numero"
+            type="number"
+            inputmode="numeric"
+            step="1"
+            placeholder="Ex.: 1"
+            autocomplete="off"
+        >
+
+        <button
+            type="button"
+            onclick="verificarDia()"
+        >
+            Descobrir dia
+        </button>
+
+        <div
+            id="resultado"
+            aria-live="polite"
+        >
+            Digite um número acima
+        </div>
+
+        <div class="rodape">
+            Feito com 💚 e código
+        </div>
+
+    </main>
+
+    <script>
+
+        function verificarDia() {
+
+            const campo =
+                document.getElementById("numero");
+
+            const resultado =
+                document.getElementById("resultado");
+
+            const valor =
+                campo.value.trim();
+
+            resultado.className = "";
+
+            /* Campo vazio */
+
+            if (valor === "") {
+
+                resultado.textContent =
+                    "Digite um número";
+
+                resultado.classList.add("erro");
+
+                return;
+            }
+
+            const numero =
+                Number(valor);
+
+            const dias = {
+
+                1: "Domingo",
+                2: "Segunda",
+                3: "Terça",
+                4: "Quarta",
+                5: "Quinta",
+                6: "Sexta",
+                7: "Sábado"
+
+            };
+
+            /* 
+               Só aceita números inteiros
+               entre 1 e 7.
+            */
+
+            if (
+                Number.isInteger(numero) &&
+                numero >= 1 &&
+                numero <= 7
+            ) {
+
+                resultado.textContent =
+                    dias[numero];
+
+                resultado.classList.add(
+                    "sucesso"
+                );
+
+            } else {
+
+                resultado.textContent =
+                    "Valor inválido";
+
+                resultado.classList.add(
+                    "erro"
+                );
+            }
+        }
+
+        /* 
+           Também permite apertar
+           ENTER para verificar.
+        */
+
+        document
+            .getElementById("numero")
+            .addEventListener(
+                "keydown",
+                function (event) {
+
+                    if (event.key === "Enter") {
+
+                        verificarDia();
+
+                    }
+
+                }
+            );
+
+    </script>
+
 </body>
+
 </html>
