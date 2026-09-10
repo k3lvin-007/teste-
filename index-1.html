@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendário Verde</title>
+<style>
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    color: white;
+    background:
+        linear-gradient(rgba(0,45,20,.72), rgba(0,15,8,.9)),
+        radial-gradient(circle at 20% 20%, #27ae60, transparent 35%),
+        radial-gradient(circle at 80% 80%, #145a32, transparent 40%),
+        #031b0d;
+}
+.app {
+    width: min(92%, 400px);
+    padding: 28px;
+    border: 1px solid #2ecc71;
+    border-radius: 24px;
+    background: rgba(0, 20, 10, .88);
+    box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    text-align: center;
+}
+.calendar {
+    width: 100px;
+    height: 90px;
+    margin: 0 auto 20px;
+    border: 4px solid #2ecc71;
+    border-radius: 12px;
+    position: relative;
+    background: #071f10;
+    overflow: hidden;
+}
+.calendar::before {
+    content: "🌿";
+    position: absolute;
+    font-size: 55px;
+    right: -5px;
+    bottom: -12px;
+    transform: rotate(-15deg);
+}
+.calendar::after {
+    content: "CALENDÁRIO";
+    position: absolute;
+    top: 8px;
+    left: 0;
+    width: 100%;
+    font-size: 10px;
+    font-weight: bold;
+    color: #b8ffd2;
+}
+h1 { margin: 0 0 8px; }
+p { color: #b8c9be; }
+input {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #2ecc71;
+    border-radius: 12px;
+    background: #07140c;
+    color: white;
+    font-size: 18px;
+    text-align: center;
+    outline: none;
+}
+button {
+    width: 100%;
+    margin-top: 12px;
+    padding: 15px;
+    border: 0;
+    border-radius: 12px;
+    background: #27ae60;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+button:hover { background: #2ecc71; }
+#resultado {
+    min-height: 28px;
+    margin-top: 20px;
+    font-size: 22px;
+    font-weight: bold;
+}
+</style>
+</head>
+<body>
+<div class="app">
+    <div class="calendar"></div>
+    <h1>Dia da Semana</h1>
+    <p>Digite um número de 1 a 7</p>
+
+    <input id="numero" type="number" placeholder="Ex.: 1" inputmode="numeric">
+    <button onclick="verificarDia()">Verificar</button>
+
+    <div id="resultado"></div>
+</div>
+
+<script>
+function verificarDia() {
+    const campo = document.getElementById("numero");
+    const resultado = document.getElementById("resultado");
+    const valor = campo.value.trim();
+
+    if (valor === "") {
+        resultado.textContent = "Digite um número";
+        return;
+    }
+
+    const numero = Number(valor);
+
+    if (numero === 1) {
+        resultado.textContent = "Domingo";
+    } else if (numero === 2) {
+        resultado.textContent = "Segunda";
+    } else if (numero === 3) {
+        resultado.textContent = "Terça";
+    } else if (numero === 4) {
+        resultado.textContent = "Quarta";
+    } else if (numero === 5) {
+        resultado.textContent = "Quinta";
+    } else if (numero === 6) {
+        resultado.textContent = "Sexta";
+    } else if (numero === 7) {
+        resultado.textContent = "Sábado";
+    } else {
+        resultado.textContent = "Valor inválido";
+    }
+}
+</script>
+</body>
+</html>
